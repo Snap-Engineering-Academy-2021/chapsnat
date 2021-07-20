@@ -1,36 +1,34 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { GiftedChat } from "react-native-gifted-chat";
-import db from "./firebase"
-import image from './assets/danny.jpg';
+//App.js
+import React from "react";
+import { StyleSheet } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import ChatScreen from "./screens/ChatScreen";
+import HomeScreen from "./screens/HomeScreen";
 
-export default function App() {
-  const [messages, setMessages] = useState([]);
-    useEffect(() => {
-      db.collection("Chats").doc("mysecondchat").get().then((snapshot) => {
-          setMessages(snapshot.data().messages);
+const Stack = createStackNavigator();
 
-          // console.log(snapshot.id);
-          // console.log(snapshot.data());
-        });
-    }, []);
-  const onSend = useCallback((messages = []) => {
-    db.collection("Chats").doc("mysecondchat").set({messages: messages});
-    setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, messages)
-    );
-  }, []);
+function App() {
   return (
-    <GiftedChat
-      messages={messages}
-      onSend={(messages) => onSend(messages)}
-      user={{ //current blue bubble
-        _id: 1,
-        name: "Danny",
-        avatar:"https://media-exp3.licdn.com/dms/image/C4D03AQEFvrwB5rWj8w/profile-displayphoto-shrink_200_200/0/1626311526253?e=1631750400&v=beta&t=TfCkkpTb0heW3mqd3D_4z0OpuA2q5YH7BnO8hXYWR0c"
-      }}
-      inverted = {true}
-      placeholder = {"Enter your meesage"}
-      showUserAvatar={true}
-    />
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Chat" component={ChatScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+  item: {
+    padding: 10,
+    fontSize: 18,
+    height: 44,
+  },
+});
+
+export default App;
