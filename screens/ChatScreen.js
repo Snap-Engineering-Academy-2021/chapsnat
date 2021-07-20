@@ -5,11 +5,13 @@ import firebase from "firebase/app";
 
 export default function ChatScreen({ route, navigation }) {
   const [messages, setMessages] = useState([]);
+  
+  const {chat} = route.params;
 
   useEffect(() => {
     let unsubscribeFromNewSnapshots = db
       .collection("Chats")
-      .doc(route.params.chat)
+      .doc(chat)
       .onSnapshot((snapshot) => {
         console.log("New Snapshot!");
         setMessages(snapshot.data().messages);
@@ -22,7 +24,7 @@ export default function ChatScreen({ route, navigation }) {
 
   const onSend = useCallback((messages = []) => {
     db.collection("Chats")
-      .doc(route.params.chat)
+      .doc(chat)
       .update({
         // arrayUnion appends the message to the existing array
         messages: firebase.firestore.FieldValue.arrayUnion(messages[0]),
@@ -40,7 +42,7 @@ export default function ChatScreen({ route, navigation }) {
         // current "blue bubble" user
         _id: "1",
         name: "Ashwin",
-        avatar: "https://lh3.googleusercontent.com/ogw/ADea4I6RD4MBWv5CWPpuDGUopm06OWDn8QaCV4YZPdVYVg=s83-c-mo",
+        avatar: "https://avatars.githubusercontent.com/u/31493110?s=400&u=238b4841c472846285b57e671d1d238930feb214&v=4",
       }}
       inverted={true}
       showUserAvatar={true}
